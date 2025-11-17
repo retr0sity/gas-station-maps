@@ -4,6 +4,12 @@ namespace App\Models;
 
 use \PDO;
 
+$host = getenv('DB_HOST') ?: 'localhost';
+$db   = getenv('DB_NAME') ?: 'prathriadb';
+$user = getenv('DB_USER') ?: 'root';
+$pass = getenv('DB_PASS') ?: '';
+
+
 class DB
 {
     private $host = 'localhost';
