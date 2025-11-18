@@ -12,7 +12,9 @@ class DB
         // For Railway deployment - uses Railway's provided MySQL environment variables
         // For local development - falls back to local MySQL credentials
         $host = getenv('MYSQLHOST') ?: getenv('DB_HOST') ?: 'localhost';
-        $dbname = getenv('MYSQLDATABASE') ?: getenv('DB_NAME') ?: 'prathriadb';
+        
+        // Use 'railway' as the database name for Railway, 'prathriadb' for local
+        $dbname = getenv('MYSQLDATABASE') ?: getenv('DB_NAME') ?: 'railway';
         $user = getenv('MYSQLUSER') ?: getenv('DB_USER') ?: 'root';
         $pass = getenv('MYSQLPASSWORD') ?: getenv('DB_PASS') ?: '';
         $port = getenv('MYSQLPORT') ?: getenv('DB_PORT') ?: '3306';
