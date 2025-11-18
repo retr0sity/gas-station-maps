@@ -52,7 +52,7 @@
 		select:focus,
 		input[type="text"]:focus,
 		input[type="number"]:focus {
-			box-shadow: inset 0(0, 0, 0, 0.2);
+			box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
 			outline: none;
 		}
 		button[type="submit"] {
@@ -80,7 +80,7 @@
 		.success-message {
 			color: #28a745;
 			font-size: 14px;
-			-align: center;
+			text-align: center; /* Fixed: added missing 'text-' */
 		}
 		.fa-check-circle {
 			color: #28a745;
@@ -108,7 +108,7 @@
     }
 
     .back-button:hover {
-      background-color: #007bff;
+      background-color: #0069d9; /* Fixed: changed to darker shade for hover effect */
     }
 	</style>
 </head>
@@ -126,7 +126,7 @@
 			<option value="">Επιλέξτε καύσιμο</option>
 		</select>
 		<label for="quantity">Ποσότητα</label>
-		<input type="number" id="quantity" placeholder="Enter the quantity" min="1" max="100" required>
+		<input type="number" id="quantity" placeholder="Εισάγετε την ποσότητα" min="1" max="100" required> <!-- Improved: Greek placeholder -->
 
 		<button type="submit">Παραγγελία</button>
 
@@ -150,7 +150,6 @@
 				error: function(xhr, resp, text) {
 					console.log(xhr, resp, text);
 				}
-		});
 			});
 
 			// Update the list of products when a gas station is selected
@@ -162,6 +161,7 @@
 					dataType: "json",
 					success: function(result) {
 						$("#productID").empty();
+						$("#productID").append('<option value="">Επιλέξτε καύσιμο</option>'); // Reset with default option
 						$.each(result, function(i, price) {
 							$("#productID").append('<option value="' + price.productID + '">' + price.fuelName + '</option>');
 						});
@@ -205,9 +205,9 @@
 						$("#error-message").html('<i class="fas fa-exclamation-circle"></i> Error: ' + error);
 						$("#success-message").html("");
 					}
+				});
 			});
-			});
-		
+		});
 	</script>
 </body>
 </html>
