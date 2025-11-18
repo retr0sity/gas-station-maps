@@ -1,10 +1,11 @@
 #!/bin/bash
 
-# Navigate to the restApi directory
-cd restApi
+# Copy the existing composer.json from restApi if needed
+cp restApi/composer.json ./
 
-# Install PHP dependencies using Composer
+# Install dependencies
 composer install --no-dev --optimize-autoloader
 
-# Start the PHP built-in server
+# Start the server from restApi directory
+cd restApi
 php -S 0.0.0.0:$PORT index.php
