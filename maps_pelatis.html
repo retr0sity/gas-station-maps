@@ -113,57 +113,24 @@
     width: calc(100% - 250px);
     float: left;
   }
-  
-  #infowindow-content {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    width: 300px;
-    height: 200px;
-    border: 1px solid #ccc;
-    background: #fff;
-    padding: 10px;
+
+  .leaflet-popup-content {
+    width: 300px !important;
   }
     </style>
 
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
+  <!-- Leaflet Marker Cluster -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 
-  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=(yourkey)"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://unpkg.com/@googlemaps/markerclusterer@2.0.2/dist/index.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script type="text/javascript">
-
-$('#login-form').submit(function(event) {
-  event.preventDefault(); // prevent default form submission
-  var username = $('#username').val();
-  var password = $('#password').val();
-  $.ajax({
-    url: 'https://gas-station-maps-production.up.railway.app/login',
-    method: 'POST',
-    data: {username: username, password: password},
-    dataType: 'json',
-    success: function(response) {
-      // Save the JWT token in local storage
-      localStorage.setItem('token', response.token);
-
-      // Decode the JWT token to get the payload
-      var payload = JSON.parse(atob(response.token.split('.')[1]));
-
-      // Check if the user is a gas station owner
-      if (payload.isGasStationOwner) {
-        // Redirect to the gas station owner dashboard
-        window.location.href = 'maps_idioktitis.html?username=' + payload.username;
-      } else {
-        // Redirect to the regular user dashboard
-        window.location.href = 'maps_pelatis.html?username=' + payload.username;
-      }
-    },
-    error: function(xhr, status, error) {
-      // Display an error message
-      alert(xhr.responseJSON.message);
-    }
-  });
-});
 
 function logOut() {
   window.location.href = "maps_prathria.html";
@@ -186,10 +153,7 @@ document.addEventListener("DOMContentLoaded", function() {
   } else {
     console.log("Element with ID 'loggedInUsername' not found");
   }
-  
 });
-
-
 
 function redirectToPage() {
   var loggedInUsername = document.getElementById("loggedInUsername").innerText;
@@ -197,317 +161,198 @@ function redirectToPage() {
   window.location.href = url;
 }
 
+// Global variables
+var myMap;
+var markersCluster;
 
-  // Define a function to initialize the Google Maps API and display the markers
+// Define a function to initialize the Leaflet map and display the markers
 function initializeMap() {
-  // Define the center and zoom level of the map
-  var center = new google.maps.LatLng(39.7576, 22.3838);
-  var zoom = 9;
-
-  // Define the map options
-  var mapOptions = {
-    center: center,
-    zoom: zoom,
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-  };
-
   // Create a new map object
-  var myMap = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
-
+  myMap = L.map('map-canvas').setView([39.7576, 22.3838], 9);
   
+  // Add OpenStreetMap tiles
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 19
+  }).addTo(myMap);
 
-  // Declare and initialize the markers array
-  var markers = [];
-  var infowindow = new google.maps.InfoWindow({
-  content: document.getElementById("infowindow-content")
-});
+  // Initialize marker cluster group
+  markersCluster = L.markerClusterGroup({
+    maxClusterRadius: 50,
+    spiderfyOnMaxZoom: true,
+    showCoverageOnHover: true,
+    zoomToBoundsOnClick: true
+  });
+  myMap.addLayer(markersCluster);
 
-var iconAP = {
-    url: 'logos/1.png',
-    scaledSize: new google.maps.Size(32, 32),
-  };
-  var iconJet = {
-    url: 'logos/2.png',
-    scaledSize: new google.maps.Size(32, 32),
-  };
-  var iconShell = {
-    url: 'logos/3.png',
-    scaledSize: new google.maps.Size(32, 32),
-  };
-  var iconSilk = {
-    url: 'logos/4.png',
-    scaledSize: new google.maps.Size(32, 32),
-  };
-  var iconEteka = {
-    url: 'logos/5.png',
-    scaledSize: new google.maps.Size(32, 32),
-  };
-  var iconAVIN = {
-    url: 'logos/6.png',
-    scaledSize: new google.maps.Size(32, 32),
-  };
-  var iconAegean = {
-    url: 'logos/7.png',
-    scaledSize: new google.maps.Size(32, 32),
-  };
-  var iconEKO = {
-    url: 'logos/8.png',
-    scaledSize: new google.maps.Size(32, 32),
-  };
-  var iconRevoil = {
-    url: 'logos/9.png',
-    scaledSize: new google.maps.Size(32, 32),
-  };
-  var iconBP = {
-    url: 'logos/10.png',
-    scaledSize: new google.maps.Size(32, 32),
-  };
-  var iconElin = {
-    url: 'logos/11.png',
-    scaledSize: new google.maps.Size(32, 32),
-  };
-  var iconDracoil = {
-    url: 'logos/12.png',
-    scaledSize: new google.maps.Size(32, 32),
-  };
-  var iconCyclon = {
-    url: 'logos/13.png',
-    scaledSize: new google.maps.Size(32, 32),
-  };
-  var iconKMoil = {
-    url: 'logos/14.png',
-    scaledSize: new google.maps.Size(32, 32),
-  };
-  var iconEL = {
-    url: 'logos/15.png',
-    scaledSize: new google.maps.Size(32, 32),
-  };
-  var iconArgo = {
-    url: 'logos/16.png',
-    scaledSize: new google.maps.Size(32, 32),
-  };
-  var iconKaoil = {
-    url: 'logos/17.png',
-    scaledSize: new google.maps.Size(32, 32),
-  };
-  var iconMed = {
-    url: 'logos/18.png',
-    scaledSize: new google.maps.Size(32, 32),
-  };
-  var iconTriaina = {
-    url: 'logos/19.png',
-    scaledSize: new google.maps.Size(32, 32),
-  };
-  var iconDefault = {
-    url: 'logos/default.png',
-    scaledSize: new google.maps.Size(32, 32),
-  };
+  // Call the getGasStationsData function with the initial ID value
+  getGasStationsData(1);
+}
 
-  function getGasStationsData(id) {
+// Custom icon creation function
+function createCustomIcon(iconUrl) {
+  return L.icon({
+    iconUrl: iconUrl,
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
+}
+
+// Define icon URLs
+var iconUrls = {
+  'AP': 'logos/1.png',
+  'Jet': 'logos/2.png',
+  'Shell': 'logos/3.png',
+  'Silk': 'logos/4.png',
+  'Eteka': 'logos/5.png',
+  'AVIN': 'logos/6.png',
+  'Aegean': 'logos/7.png',
+  'EKO': 'logos/8.png',
+  'Revoil': 'logos/9.png',
+  'BP': 'logos/10.png',
+  'Elin': 'logos/11.png',
+  'Dracoil': 'logos/12.png',
+  'Cyclon': 'logos/13.png',
+  'KMoil': 'logos/14.png',
+  'EL': 'logos/15.png',
+  'Argo': 'logos/16.png',
+  'Kaoil': 'logos/17.png',
+  'Med': 'logos/18.png',
+  'Triaina': 'logos/19.png',
+  'Default': 'logos/default.png'
+};
+
+function getGasStationsData(id) {
   // Define the AJAX call to fetch the gas station data from the server
   jQuery.ajax({
     url: 'https://gas-station-maps-production.up.railway.app/gasstations/prices/' + id,
     dataType: 'json',
     success: function(response) {
-      // Clear the markers array and the map
-      for (var i = 0; i < markers.length; i++) {
-        markers[i].setMap(null);
-      }
-      markers = [];
+      // Clear existing markers
+      markersCluster.clearLayers();
 
       // Loop through the gas stations and add markers to the map
       if (response.length > 0) {
         for (var i = 0; i < response.length; i++) {
           var gasStation = response[i];
-          var latLng = new google.maps.LatLng(gasStation.gasStationLat, gasStation.gasStationLong);
-          var icon;
+          var latLng = [gasStation.gasStationLat, gasStation.gasStationLong];
+          var iconUrl = iconUrls.Default;
 
-          if (gasStation.fuelCompNormalName.includes('BP'))
-          {
-            icon=iconBP;
-          }
-          else if (gasStation.fuelCompNormalName.includes('CYCLON'))
-          {
-            icon=iconCyclon;
-          }
-          else if (gasStation.fuelCompNormalName.includes('REVOIL'))
-          {
-            icon=iconRevoil;
-          }
-          else if (gasStation.fuelCompNormalName.includes('SHELL'))
-          {
-            icon=iconShell;
-          }
-          else if (gasStation.fuelCompNormalName.includes('RON'))
-          {
-            icon=iconGeneric;
-          }
-          else if (gasStation.fuelCompNormalName.includes('AVIN'))
-          {
-            icon=iconAVIN;
-          }
-          else if (gasStation.fuelCompNormalName.includes('ΕΚΟ'))
-          {
-            icon=iconEKO;
-          }
-          else if (gasStation.fuelCompNormalName.includes('ΕΛΙΝ'))
-          {
-            icon=iconElin;
-          }
-          else if (gasStation.fuelCompNormalName.includes('AEGEAN'))
-          {
-            icon=iconAegean;
-          }
-          else if (gasStation.fuelCompNormalName.includes('ΕΛΙΝΟΙΛ'))
-          {
-            icon=iconEL;
-          }
-          else if (gasStation.fuelCompNormalName.includes('Α.Π.'))
-          {
-            icon=iconAP;
-          }
-          else if (gasStation.fuelCompNormalName.includes('KAOIL'))
-          {
-            icon=iconKaoil;
-          }
-          else if (gasStation.fuelCompNormalName.includes('ΑΡΓΩ'))
-          {
-            icon=iconArgo;
-          }
-          else if (gasStation.fuelCompNormalName.includes('JETOIL'))
-          {
-            icon=iconJet;
-          }
-          else if (gasStation.fuelCompNormalName.includes('SILKOIL'))
-          {
-            icon=iconSilk;
-          }
-          else if (gasStation.fuelCompNormalName.includes('ΤΡΙΑΙΝΑ'))
-          {
-            icon=iconTriaina;
-          }
-          else if (gasStation.fuelCompNormalName.includes('ΕΤΕΚΑ'))
-          {
-            icon=iconEteka;
-          }
-          else if (gasStation.fuelCompNormalName.includes(''))
-          {
-            icon=iconDefault;
+          // Determine which icon to use based on fuel company name
+          if (gasStation.fuelCompNormalName.includes('BP')) {
+            iconUrl = iconUrls.BP;
+          } else if (gasStation.fuelCompNormalName.includes('CYCLON')) {
+            iconUrl = iconUrls.Cyclon;
+          } else if (gasStation.fuelCompNormalName.includes('REVOIL')) {
+            iconUrl = iconUrls.Revoil;
+          } else if (gasStation.fuelCompNormalName.includes('SHELL')) {
+            iconUrl = iconUrls.Shell;
+          } else if (gasStation.fuelCompNormalName.includes('AVIN')) {
+            iconUrl = iconUrls.AVIN;
+          } else if (gasStation.fuelCompNormalName.includes('ΕΚΟ')) {
+            iconUrl = iconUrls.EKO;
+          } else if (gasStation.fuelCompNormalName.includes('ΕΛΙΝ')) {
+            iconUrl = iconUrls.Elin;
+          } else if (gasStation.fuelCompNormalName.includes('AEGEAN')) {
+            iconUrl = iconUrls.Aegean;
+          } else if (gasStation.fuelCompNormalName.includes('ΕΛΙΝΟΙΛ')) {
+            iconUrl = iconUrls.EL;
+          } else if (gasStation.fuelCompNormalName.includes('Α.Π.')) {
+            iconUrl = iconUrls.AP;
+          } else if (gasStation.fuelCompNormalName.includes('KAOIL')) {
+            iconUrl = iconUrls.Kaoil;
+          } else if (gasStation.fuelCompNormalName.includes('ΑΡΓΩ')) {
+            iconUrl = iconUrls.Argo;
+          } else if (gasStation.fuelCompNormalName.includes('JETOIL')) {
+            iconUrl = iconUrls.Jet;
+          } else if (gasStation.fuelCompNormalName.includes('SILKOIL')) {
+            iconUrl = iconUrls.Silk;
+          } else if (gasStation.fuelCompNormalName.includes('ΤΡΙΑΙΝΑ')) {
+            iconUrl = iconUrls.Triaina;
+          } else if (gasStation.fuelCompNormalName.includes('ΕΤΕΚΑ')) {
+            iconUrl = iconUrls.Eteka;
           }
 
-          var marker = new google.maps.Marker({
-            position: latLng,
-            map: myMap,
+          // Create popup content
+          var popupContent = 
+            '<b>' + gasStation.gasStationOwner + '</b><br>' + gasStation.ddNormalName +
+            '<br>' +
+            '<b>' + gasStation.fuelName + ': ' + gasStation.fuelPrice +
+            '<br>Last updated: ' + gasStation.dateUpdated +
+            '<br>Is premium: ' + gasStation.isPremium + '</b>';
+
+          // Create marker with custom icon
+          var marker = L.marker(latLng, {
             title: gasStation.gasStationOwner + ", " + gasStation.ddNormalName,
-            icon: icon,
-            StationID: gasStation.gasStationID
-          });
+            icon: createCustomIcon(iconUrl)
+          }).bindPopup(popupContent);
 
-          markers.push(marker);
-
-          
-          (function(marker, gasStation) {
-            jQuery.ajax({
-              url: 'https://gas-station-maps-production.up.railway.app/gasstations/' + gasStation.gasStationID + '/prices/' + id,
-              dataType: 'json',
-              success: function(response) {
-                var price = response;
-                var infowindowContent = 
-                  '<b>' + gasStation.gasStationOwner + '</b><br>' + gasStation.ddNormalName +
-                  '<br>' +
-                  '<b>' + gasStation.fuelName + ': ' + gasStation.fuelPrice +
-                  '<br>Last updated: ' + gasStation.dateUpdated +
-                  '<br>Is premium: ' + gasStation.isPremium + '</b>';
-
-                bindInfoWindow(marker, myMap, infowindow, infowindowContent);
+          // Add click event to fetch and display price list
+          marker.on('popupopen', function() {
+            var marker = this;
+            $.ajax({
+              url: 'https://gas-station-maps-production.up.railway.app/gasstations/' + gasStation.gasStationID + '/prices?_=' + new Date().getTime(),
+              type: 'GET',
+              success: function(data) {
+                var priceListHtml = '<h6>Τιμές:</h6><ul>';
+                for (var i = 0; i < data.length; i++) {
+                  priceListHtml += '<li>' + data[i].fuelName + ': ' + data[i].fuelPrice + ' €/L</li>';
+                }
+                priceListHtml += '</ul>';
+                $('#price-list').html(priceListHtml);
               },
-              error: function(jqXHR, textStatus, errorThrown) {
-                console.log("Error fetching data: " + textStatus + " - " + errorThrown);
+              error: function(xhr, status, error) {
+                // Handle the error
               }
             });
-          })(marker, gasStation);
-          function bindInfoWindow(marker, map, infowindow, html) {
- 
-    google.maps.event.addListener(marker, 'click', function() {
-    infowindow.setContent(html);
-    infowindow.open(map, marker);
-    $.ajax({
-  url: 'https://gas-station-maps-production.up.railway.app/gasstations/' + marker.StationID + '/prices?_=' + new Date().getTime(),
-  type: 'GET',
-  success: function(data) {
-    var priceListHtml = '<h6>Τιμές:</h6><ul>';
-    for (var i = 0; i < data.length; i++) {
-      priceListHtml += '<li>' + data[i].fuelName + ': ' + data[i].fuelPrice + ' €/L</li>';
-    }
-    priceListHtml += '</ul>';
-    $('#price-list').html(priceListHtml);
-  },
-  error: function(xhr, status, error) {
-    // Handle the error
-  }
-});
-  });
-}
+          });
+
+          // Add marker to cluster group
+          markersCluster.addLayer(marker);
         }
       }
     },
     error: function(jqXHR, textStatus, errorThrown) {
       console.log("Error fetching data: " + textStatus + " - " + errorThrown);
     }
-    
   });
+
+  // Fetch price summary
   $.ajax({
-                url: 'https://gas-station-maps-production.up.railway.app/prices-summary/' + id, 
-                dataType: 'json',
-                success: function (data) {
-                    // Update the content of the DOM elements with the results
-                    $('#gasStationsCount').text(data.gasStationsCount);
-                    $('#maxPrice').text(data.maxPrice);
-                    $('#minPrice').text(data.minPrice);
-                    $('#avgPrice').text(data.avgPrice);
-                },
-                error: function () {
-                    alert('Failed to fetch prices summary');
-                }
-            });
-            
+    url: 'https://gas-station-maps-production.up.railway.app/prices-summary/' + id, 
+    dataType: 'json',
+    success: function (data) {
+      // Update the content of the DOM elements with the results
+      $('#gasStationsCount').text(data.gasStationsCount);
+      $('#maxPrice').text(data.maxPrice);
+      $('#minPrice').text(data.minPrice);
+      $('#avgPrice').text(data.avgPrice);
+    },
+    error: function () {
+      alert('Failed to fetch prices summary');
+    }
+  });
 }
 
-  // Define the function to bind the infowindow to the marker
-  
-
-  var dropdownItems = document.querySelectorAll('.dropdown-item');
+// Fuel type dropdown event listeners
+var dropdownItems = document.querySelectorAll('.dropdown-item');
 dropdownItems.forEach(function(item) {
   item.addEventListener('click', function() {
     // Get the ID of the selected item
     var id = this.getAttribute('id');
-
     // Call the getGasStationsData function with the selected ID
     getGasStationsData(id);
   });
 });
 
-  // Call the getGasStationsData function with the initial ID value
-  getGasStationsData(1);
-
-  new markerClusterer.MarkerClusterer({
-        myMap,
-        markers
-    });
-
-}
-
-// Call the initializeMap function when the page loads
-google.maps.event.addDomListener(window, 'load', initializeMap);
-
-
-
+// Initialize map when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  initializeMap();
+});
 
   </script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-
-
-
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -561,10 +406,7 @@ google.maps.event.addDomListener(window, 'load', initializeMap);
     </ul>
 </div>
 
-  <div id="map-canvas"/>
-  <div id="infowindow-content"></div>
+  <div id="map-canvas"></div>
   
-  
-
 </body>
 </html>
