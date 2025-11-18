@@ -142,7 +142,7 @@ $app->post('/login', function (Request $request, Response $response) {
   $user = $stmt->fetch(PDO::FETCH_OBJ);
 
   // Check if the user is a gas station owner
-  $sql = "SELECT * FROM gasStations WHERE username = :username";
+  $sql = "SELECT * FROM gasstations WHERE username = :username";
   $stmt = $conn->prepare($sql);
   $stmt->bindParam(':username', $username, PDO::PARAM_STR);
   $stmt->execute();
@@ -326,16 +326,16 @@ $app->post('/orders', function (Request $request, Response $response) {
 });
 
 $app->get('/gasstations', function($request, $response) {
-  $sql = "SELECT gasStations.*, users.username 
-          FROM gasStations 
-          JOIN users ON gasStations.username = users.username";
+  $sql = "SELECT gasstations.*, users.username 
+          FROM gasstations 
+          JOIN users ON gasstations.username = users.username";
   try {
       $db = new db();
       $db = $db->connect();
       $stmt = $db->query($sql);
-      $gasStations = $stmt->fetchAll(PDO::FETCH_OBJ);
+      $gasstations = $stmt->fetchAll(PDO::FETCH_OBJ);
       $db = null;
-      $response->getBody()->write(json_encode($gasStations));
+      $response->getBody()->write(json_encode($gasstations));
       return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
   } catch(PDOException $e) {
       echo '{"error": {"text": '.$e->getMessage().'}}';
@@ -346,7 +346,7 @@ $app->get('/gasstations/prices/{fuelTypeID}', function (Request $request, Respon
   $fuelTypeID = $args['fuelTypeID'];
   $sql = "SELECT p.*, g.gasStationLat, g.gasStationLong, g.gasStationOwner, g.gasStationAddress, g.ddNormalName, g.fuelCompNormalName
           FROM pricedata p
-          JOIN gasStations g ON p.gasStationID = g.gasStationID
+          JOIN gasstations g ON p.gasStationID = g.gasStationID
           WHERE p.fuelTypeID = :fuelTypeID";
 
   try {
@@ -376,7 +376,7 @@ $app->get('/gasstations/prices/{fuelTypeID}', function (Request $request, Respon
 $app->get('/gasstation/{username}', function (Request $request, Response $response, $args) {
   $username = $args['username'];
  
-  $sql = "SELECT gasStationID FROM gasStations WHERE username = :username";
+  $sql = "SELECT gasStationID FROM gasstations WHERE username = :username";
  
   try {
     $db = new Db();
@@ -416,7 +416,7 @@ $app->get('/gasstation/{username}', function (Request $request, Response $respon
 $app->get('/products/{username}', function (Request $request, Response $response, $args) {
   $username = $args['username'];
 
-  $sql = "SELECT pricedata.productID, pricedata.fuelName, pricedata.fuelPrice FROM pricedata INNER JOIN gasStations ON pricedata.gasStationID = gasStations.gasStationID WHERE gasStations.username = :username";
+  $sql = "SELECT pricedata.productID, pricedata.fuelName, pricedata.fuelPrice FROM pricedata INNER JOIN gasstations ON pricedata.gasStationID = gasstations.gasStationID WHERE gasstations.username = :username";
 
   try {
       $db = new Db();
