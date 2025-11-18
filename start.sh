@@ -1,3 +1,0 @@
-#!/bin/bash
-cd restApi
-php -S 0.0.0.0:$PORT index.php
