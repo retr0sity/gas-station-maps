@@ -2,27 +2,30 @@
 
 namespace App\Models;
 
-use \PDO;
-
-$host = getenv('DB_HOST') ?: 'localhost';
-$db   = getenv('DB_NAME') ?: 'prathriadb';
-$user = getenv('DB_USER') ?: 'root';
-$pass = getenv('DB_PASS') ?: '';
-
+use PDO;
+use PDOException;
 
 class DB
 {
-    private $host = 'localhost';
-    private $user = 'root';
-    private $pass = '';
-    private $dbname = 'prathriadb';
-
     public function connect()
     {
-        $conn_str = "mysql:host=$this->host;dbname=$this->dbname";
-        $conn = new PDO($conn_str, $this->user, $this->pass);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        // For Railway deployment - uses Railway's provided MySQL environment variables
+        // For local development - falls back to local MySQL credentials
+        $host = getenv('MYSQLHOST') ?: getenv('DB_HOST') ?: 'localhost';
+        $dbname = getenv('MYSQLDATABASE') ?: getenv('DB_NAME') ?: 'prathriadb';
+        $user = getenv('MYSQLUSER') ?: getenv('DB_USER') ?: 'root';
+        $pass = getenv('MYSQLPASSWORD') ?: getenv('DB_PASS') ?: '';
+        $port = getenv('MYSQLPORT') ?: getenv('DB_PORT') ?: '3306';
 
-        return $conn;
+        // Connection string for MySQL
+        $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
+
+        try {
+            $conn = new PDO($dsn, $user, $pass);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            return $conn;
+        } catch (PDOException $e) {
+            throw new PDOException("Database connection failed: " . $e->getMessage());
+        }
     }
 }
