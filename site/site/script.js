@@ -7,7 +7,7 @@ $(document).ready(function() {
 
     // Fetch data from REST API using AJAX
     $.ajax({
-        url: 'http://your-rest-api.com/gas-stations',
+        url: 'https://gas-station-maps-production.up.railway.app',
         type: 'GET',
         dataType: 'json',
         success: function(data) {
