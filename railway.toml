@@ -5,4 +5,4 @@ builder = "nixpacks"
 NIXPACKS_PHP_VERSION = "8.2"
 
 [deploy]
-startCommand = "cd restApi && php -S 0.0.0.0:$PORT -t public"
+startCommand = "cd restApi/restApi && php -S 0.0.0.0:$PORT -t public"
