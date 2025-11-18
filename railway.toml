@@ -2,4 +2,4 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "./start.sh"
+startCommand = "cd restApi && php -S 0.0.0.0:$PORT index.php"
