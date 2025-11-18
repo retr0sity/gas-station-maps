@@ -138,7 +138,7 @@ $('#login-form').submit(function(event) {
   var username = $('#username').val();
   var password = $('#password').val();
   $.ajax({
-    url: 'http://localhost:8888/login',
+    url: 'https://gas-station-maps-production.up.railway.app/login',
     method: 'POST',
     data: {username: username, password: password},
     dataType: 'json',
@@ -306,7 +306,7 @@ var iconAP = {
   function getGasStationsData(id) {
   // Define the AJAX call to fetch the gas station data from the server
   jQuery.ajax({
-    url: 'http://localhost:8888/gasstations/prices/' + id,
+    url: 'https://gas-station-maps-production.up.railway.app/gasstations/prices/' + id,
     dataType: 'json',
     success: function(response) {
       // Clear the markers array and the map
@@ -408,7 +408,7 @@ var iconAP = {
           
           (function(marker, gasStation) {
             jQuery.ajax({
-              url: 'http://localhost:8888/gasstations/' + gasStation.gasStationID + '/prices/' + id,
+              url: 'https://gas-station-maps-production.up.railway.app/gasstations/' + gasStation.gasStationID + '/prices/' + id,
               dataType: 'json',
               success: function(response) {
                 var price = response;
@@ -432,7 +432,7 @@ var iconAP = {
     infowindow.setContent(html);
     infowindow.open(map, marker);
     $.ajax({
-  url: 'http://localhost:8888/gasstations/' + marker.StationID + '/prices?_=' + new Date().getTime(),
+  url: 'https://gas-station-maps-production.up.railway.app/gasstations/' + marker.StationID + '/prices?_=' + new Date().getTime(),
   type: 'GET',
   success: function(data) {
     var priceListHtml = '<h6>Τιμές:</h6><ul>';
@@ -457,7 +457,7 @@ var iconAP = {
     
   });
   $.ajax({
-                url: 'http://localhost:8888/prices-summary/' + id, 
+                url: 'https://gas-station-maps-production.up.railway.app/prices-summary/' + id, 
                 dataType: 'json',
                 success: function (data) {
                     // Update the content of the DOM elements with the results

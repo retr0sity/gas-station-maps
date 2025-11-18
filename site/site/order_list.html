@@ -89,7 +89,7 @@
 
       // Call the PHP script to delete the order
       $.ajax({
-        url: "http://localhost:8888/orders/" + orderId,
+        url: "https://gas-station-maps-production.up.railway.app/orders/" + orderId,
         type: "DELETE",
         dataType: "json",
         success: function(result) {
@@ -111,7 +111,7 @@
 
       // Call the PHP script to fetch the gasStationID
       $.ajax({
-        url: "http://localhost:8888/gasstation/" + username,
+        url: "https://gas-station-maps-production.up.railway.app/gasstation/" + username,
         type: "GET",
         dataType: "json",
         success: function(result) {
@@ -119,7 +119,7 @@
 
           // Call the PHP script to fetch the orders
           $.ajax({
-            url: "http://localhost:8888/orders/" + gasStationID,
+            url: "https://gas-station-maps-production.up.railway.app/orders/" + gasStationID,
             type: "GET",
             dataType: "json",
             success: function(result) {

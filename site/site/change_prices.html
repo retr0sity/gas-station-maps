@@ -83,7 +83,7 @@ input[type="text"] {
 
     // Call the REST API function to get the gas station's products
     $.ajax({
-      url: "http://localhost:8888/products/" + username,
+      url: "https://gas-station-maps-production.up.railway.app/products/" + username,
       type: "GET",
       dataType: "json",
       success: function(result) {
@@ -101,7 +101,7 @@ input[type="text"] {
 
           // Call the REST API function to update the fuel price
           $.ajax({
-              url: "http://localhost:8888/pricedata/" + productID,
+              url: "https://gas-station-maps-production.up.railway.app/pricedata/" + productID,
               type: "PUT",
               dataType: "json",
               data: {
@@ -110,7 +110,7 @@ input[type="text"] {
               success: function(result) {
                   // Fetch the updated list from the server
                   $.ajax({
-                      url: "http://localhost:8888/products/" + username,
+                      url: "https://gas-station-maps-production.up.railway.app/products/" + username,
                       type: "GET",
                       dataType: "json",
                       success: function(result) {
@@ -131,11 +131,11 @@ input[type="text"] {
               },
               error: function(jqXHR, textStatus, errorThrown) {
                   // Update the fuel price in the table
-$("#fuel-price-" + productID).text(fuelPrice);
+                  $("#fuel-price-" + productID).text(fuelPrice);
 
-// Display a success message
-$("#message").text("Η τιμή ενημερώθηκε με επιτυχία!");
-},
+                  // Display a success message
+                  $("#message").text("Η τιμή ενημερώθηκε με επιτυχία!");
+              },
           });
         });
       },

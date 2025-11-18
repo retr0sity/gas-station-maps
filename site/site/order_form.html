@@ -139,7 +139,7 @@
 		$(document).ready(function() {
 			// Get the list of gas stations
 			$.ajax({
-				url: "http://localhost:8888/gasstations",
+				url: "https://gas-station-maps-production.up.railway.app/gasstations",
 				type: "GET",
 				dataType: "json",
 				success: function(result){
@@ -157,7 +157,7 @@
 			$("#gasStationID").change(function() {
 				var gasStationID = $(this).val();
 				$.ajax({
-					url: "http://localhost:8888/gasstations/" + gasStationID + "/prices",
+					url: "https://gas-station-maps-production.up.railway.app/gasstations/" + gasStationID + "/prices",
 					type: "GET",
 					dataType: "json",
 					success: function(result) {
@@ -189,7 +189,7 @@
 
 				// Send an AJAX request to the REST API endpoint
 				$.ajax({
-					url: "http://localhost:8888/orders",
+					url: "https://gas-station-maps-production.up.railway.app/orders",
 					method: "POST",
 					data: JSON.stringify(data),
 					dataType: "json",
