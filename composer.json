@@ -1,10 +1,8 @@
 {
     "require": {
-        "php": "^8.0",
+        "php": "^8.2",
         "slim/slim": "^4.0",
         "slim/psr7": "^1.6"
-    },
-    "require-dev": {
-        "composer/composer": "^2.0"
     }
+
 }
