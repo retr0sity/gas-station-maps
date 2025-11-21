@@ -153,6 +153,103 @@
         .leaflet-popup-content {
             width: 300px !important;
         }
+
+        /* Info button styling */
+        .info-btn {
+            background-color: #17a2b8;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 15px;
+        }
+
+        .info-btn:hover {
+            background-color: #138496;
+        }
+
+        /* Modal styling enhancements */
+        .modal-content {
+            background-color: #2b3035;
+            color: #e9ecef;
+        }
+
+        .modal-header {
+            background-color: #343a40;
+            color: white;
+            border-bottom: 1px solid #495057;
+        }
+
+        .modal-header .btn-close {
+            filter: invert(1);
+        }
+
+        .modal-body {
+            background-color: #2b3035;
+        }
+
+        .modal-body h6 {
+            color: #ffffff;
+        }
+
+        .modal-body p, .modal-body li {
+            color: #e9ecef;
+        }
+
+        .modal-body a {
+            color: #4da3ff;
+        }
+
+        .modal-body a:hover {
+            color: #80bdff;
+        }
+
+        .modal-body code {
+            background-color: #1a1d20;
+            color: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .modal-footer {
+            background-color: #1f2326 !important;
+            border-top: 1px solid #2d3135 !important;
+        }
+
+        .modal-footer .btn-secondary {
+            background-color: #495057;
+            border-color: #495057;
+            color: #ffffff;
+        }
+
+        .modal-footer .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+        .tech-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            margin: 5px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 15px;
+            font-size: 14px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .feature-list li:before {
+            content: "✓ ";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 8px;
+        }
     </style>
 
     <!-- Leaflet CSS & JS -->
@@ -197,6 +294,11 @@
                             <li><a class="dropdown-item" href="#" id="7">Θέρμανσης</a></li>
                         </ul>
                     </li>
+                    <li class="nav-item">
+                        <button class="info-btn" data-bs-toggle="modal" data-bs-target="#infoModal">
+                            ℹ️ About This Project
+                        </button>
+                    </li>
                 </ul>
                 
                 <!-- Login Form -->
@@ -216,6 +318,62 @@
             </div>
         </div>
     </nav>
+
+    <!-- Information Modal -->
+    <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="infoModalLabel">📍 About Πρατήρια Maps (Gas Station Maps)</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6 class="fw-bold">🎯 Project Purpose</h6>
+                    <p>Πρατήρια Maps is an educational full-stack web application designed as a training exercise in RESTful API development and implementation. The project provides a comprehensive platform for managing and visualizing gas station data on an interactive map, with fuel price comparison capabilities.</p>
+
+                    <h6 class="fw-bold mt-4">🛠️ Technologies Used</h6>
+                    <div>
+                        <span class="tech-badge">PHP</span>
+                        <span class="tech-badge">Slim Framework</span>
+                        <span class="tech-badge">MySQL</span>
+                        <span class="tech-badge">JavaScript</span>
+                        <span class="tech-badge">jQuery</span>
+                        <span class="tech-badge">Leaflet.js</span>
+                        <span class="tech-badge">Bootstrap 5</span>
+                        <span class="tech-badge">Firebase JWT</span>
+                    </div>
+
+                    <h6 class="fw-bold mt-4">✨ Key Features</h6>
+                    <ul class="feature-list">
+                        <li>Interactive map visualization of gas stations using Leaflet.js</li>
+                        <li>Marker clustering for improved performance with large datasets</li>
+                        <li>Filter stations by fuel type (Unleaded 95/100, Diesel, LPG, etc.)</li>
+                        <li>Real-time price statistics (max, min, average prices)</li>
+                        <li>JWT-based authentication system</li>
+                        <li>RESTful API with full CRUD operations</li>
+                        <li>Role-based interfaces for gas station owners and customers</li>
+                        <li>Responsive design with Bootstrap 5</li>
+                    </ul>
+
+                    <h6 class="fw-bold mt-4">🏗️ Architecture</h6>
+                    <p>The application follows a client-server architecture with a PHP Slim Framework backend providing RESTful endpoints, MySQL for data persistence, and a responsive frontend built with vanilla JavaScript and modern libraries. Authentication is handled via JWT tokens for secure session management.</p>
+
+                    <h6 class="fw-bold mt-4">🔐 Demo Accounts</h6>
+                    <p class="mb-1"><strong>Gas Station Owners:</strong> user1 - user158 (e.g., username: <code>user102</code>, password: <code>pass102</code>)</p>
+                    <p><strong>Customers:</strong> user159, user160 (e.g., username: <code>user159</code>, password: <code>pass159</code>)</p>
+
+                    <h6 class="fw-bold mt-4">🔗 Source Code</h6>
+                    <p><a href="https://github.com/retr0sity/gas-station-maps" target="_blank" class="text-primary">View on GitHub</a></p>
+
+                    <h6 class="fw-bold mt-4">📝 License</h6>
+                    <p class="mb-0">This project is licensed under the MIT License.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div id="summary-data">
         <h6>Γενικά στοιχεία τιμών</h6>
